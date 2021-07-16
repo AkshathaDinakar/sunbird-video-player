@@ -1,6 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
+
+
+import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation, OnDestroy, Output,EventEmitter, Input,OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import videojs from 'video.js';
+import { content } from '../../player';
 import { ViewerService } from '../../services/viewer.service';
+import 'videojs-markers';
+import { Observable } from 'rxjs';
+declare var jQuery:any;
 
 @Component({
   selector: 'video-player',
@@ -8,7 +14,8 @@ import { ViewerService } from '../../services/viewer.service';
   styleUrls: ['./video-player.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
+
+export class VideoPlayerComponent implements AfterViewInit, OnDestroy,OnChanges {
   showBackwardButton = false;
   showForwardButton = false;
   showPlayButton = true;
@@ -32,8 +39,27 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
   time = 10;
   startTime;
   totalSpentTime = 0;
-
-  constructor(public viewerService: ViewerService, private renderer2: Renderer2) { }
+  
+  @Output() videoElement = new EventEmitter<any>();
+  @Input() events: {
+    action : string
+  }
+  constructor(public viewerService: ViewerService, private renderer2: Renderer2) { 
+    console.log('changes from input',this.events);
+    }
+   ngOnChanges(){
+     if(this.events.action == 'Pause'){
+      this.player.pause();
+      jQuery('#overlay-button').hide();
+      document.getElementById('overlay-button').style.display ="none";
+     
+     }else if(this.events.action == 'Play'){
+      this.player.play();
+     }else{
+       
+     }
+//console.log('changes from input',this.events);
+   }
 
   ngAfterViewInit() {
     this.viewerService.getPlayerOptions().then(options => {
@@ -50,9 +76,16 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
       }, function onLoad() {
 
       });
-      this.registerEvents();
-    });
+this.registerEvents();
 
+this.videoElement.emit(this.target.nativeElement);
+
+
+
+
+      
+    });
+   
 
     this.unlistenTargetMouseEnter = this.renderer2.listen(this.target.nativeElement, 'mouseenter', () => {
       this.showControls = true;
@@ -90,6 +123,8 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
       if (event === 'OPEN_MENU') { this.pause(); }
       if (event === 'CLOSE_MENU') { this.play(); }
     });
+
+    
   }
 
   registerEvents() {
@@ -133,6 +168,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     this.showPlayButton = false;
     this.toggleForwardRewindButton();
     this.viewerService.raiseHeartBeatEvent('PLAY');
+    
   }
 
   pause() {
@@ -224,4 +260,6 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     this.unlistenControlDivTouchStart();
     this.unlistenTargetTouchStart();
   }
+
+
 }

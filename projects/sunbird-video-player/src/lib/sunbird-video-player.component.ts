@@ -5,8 +5,17 @@ import {
 import { ErrorService , errorCode , errorMessage } from '@project-sunbird/sunbird-player-sdk-v8';
 
 import { PlayerConfig } from './playerInterfaces';
+import { data1 } from './quml-library-data';
 import { ViewerService } from './services/viewer.service';
 import { SunbirdVideoPlayerService } from './sunbird-video-player.service';
+import videojs from 'video.js';
+import 'videojs-markers';
+import { Subject } from 'rxjs';
+import { QuestionCursorImplementationService } from './question-cursor-implementation.service';
+import { data as sunbirdData} from './sunbird-data';
+// declare var jQuery:any;
+
+
 @Component({
   selector: 'sunbird-video-player',
   templateUrl: './sunbird-video-player.component.html',
@@ -30,12 +39,23 @@ export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDes
   private unlistenMouseEnter: () => void;
   private unlistenMouseLeave: () => void;
 
+   QumlPlayerConfig = data1;
+   isQUMLPlayerShown: boolean = false
+   showProceed = false;
+  videoDisplay = 'block';
+  player_video : any;
+  eventsSubject: Subject<any> = new Subject<any>();
+    displayPauseAndPlay = {};
+    markers = sunbirdData.map((marker) => {
+      return {time : marker.time , text : marker.question.name}
+    })
   constructor(
     public videoPlayerService: SunbirdVideoPlayerService,
     public viewerService: ViewerService,
     public cdr: ChangeDetectorRef,
     private renderer2: Renderer2,
-    public errorService: ErrorService
+    public errorService: ErrorService,
+    private questionCursor: QuestionCursorImplementationService
   ) {
     this.playerEvent = this.viewerService.playerEvent;
     this.viewerService.playerEvent.subscribe(event => {
@@ -59,6 +79,8 @@ export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDes
         }
       });
     });
+
+    
   }
 
   @HostListener('document:TelemetryEvent', ['$event'])
@@ -141,6 +163,74 @@ export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDes
     a.remove();
     this.viewerService.raiseHeartBeatEvent('DOWNLOAD');
   }
+
+  getElementId(event){
+console.log('event from videoplayer',event);
+this.player_video = videojs(event);
+    console.log('get details about video',this.player_video);
+    this.player_video.markers(
+     {
+      markerStyle: {
+        'width':'10px',
+        'background-color': 'red'
+    },
+      markers: this.markers,
+
+      onMarkerReached:((marker,index) =>{
+        console.log('markers in constructor',this.markers);
+        console.log('reached marker',marker);
+        console.log('reached marker Index',index);
+       
+       
+        this.showQUMLPlayer(marker);
+        this.updateQUMLPlayerConfig(marker);
+
+        
+      }),
+      
+    });
+  }
+
+  showQUMLPlayer(marker) {
+   // this.eventsSubject.next({ action: 'pause', data: null });
+   // this.eventsSubject.next({ action: 'seekTo', data: { seconds: marker.time } });
+   this.displayPauseAndPlay = {
+     action : 'Pause'
+   }
+    console.log('eventSubject',this.displayPauseAndPlay);
+    this.isQUMLPlayerShown = true;
+   this.videoDisplay = 'none';
+  }
+
+  updateQUMLPlayerConfig(marker) {
+  
+    this.QumlPlayerConfig = this.questionCursor.getQUMLPlayerConfig(marker.time);
+    console.log('this.QumlPlayerConfig',this.QumlPlayerConfig);
+  }
+
+  getPlayerEvents(event) {
+    console.log('get player events', JSON.stringify(event));
+    // let time = this.questionCursor.getTime(event.item.id)
+    // this.showProceed = true
+    // if(event.pass == 'No') {
+    //   jQuery(`div[data-marker-time='${time}']`).css('background-color', 'red')
+    // } else {
+    //   jQuery(`div[data-marker-time='${time}']`).css('background-color', 'green')
+    // }
+  }
+
+  getTelemetryEvents(event) {
+    console.log('event is for telemetry', JSON.stringify(event));
+  }
+
+  proceedOrClose(){
+    this.isQUMLPlayerShown = false;
+    this.videoDisplay = 'block';
+    this.displayPauseAndPlay = {
+      action : 'Play'
+    }
+  }
+
 
   @HostListener('window:beforeunload')
   ngOnDestroy() {

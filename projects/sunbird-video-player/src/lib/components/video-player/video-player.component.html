@@ -1,4 +1,4 @@
-<video #target class="video-js" controls></video>
+<video #target class="video-js"   controls></video>
 <div #controlDiv>
   <div [ngClass]="{'player-for-back-ward-controls': showControls }">
     <div class="player-container" *ngIf="showControls">
@@ -49,3 +49,9 @@
 
 
 </div>
+
+<div >
+  <button class="play-video" (click)="play()">Play</button>
+<button class="pause-video" (click)="pause()">Pause</button>
+</div>
+

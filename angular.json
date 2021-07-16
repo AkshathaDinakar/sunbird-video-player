@@ -25,19 +25,26 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player/lib/assets/",
+                "input": "src/assets",
                 "output": "/assets/"
               }
             ],
             "styles": [
               "src/styles.scss",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
-              "node_modules/video.js/dist/video-js.min.css"
+              "node_modules/video.js/dist/video-js.min.css",
+              "node_modules/videojs-markers/dist/videojs.markers.min.css",
+              "src/quml-carousel.css",
+              "./node_modules/katex/dist/katex.min.css"
+              
             ],
             "scripts": [
-              "node_modules/@project-sunbird/telemetry-sdk/index.js"
+              "node_modules/@project-sunbird/telemetry-sdk/index.js",
+              "node_modules/katex/dist/katex.min.js"
+            
             ],
             "es5BrowserSupport": true,
             "preserveSymlinks": true

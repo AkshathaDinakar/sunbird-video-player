@@ -3,3 +3,22 @@
 html.PlayerMediaQueryClass {
     font-size: calc(12px + (32 - 12) * ((100vw - 320px) / (1920 - 320)));
   }
+
+  body {
+    background: white !important; 
+}
+
+html, body {
+    height: 100%;
+}
+
+figure.image img {
+    max-width: 100%;
+}
+
+.landscape-content{
+  padding: 74px 56px 0 64px;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+}
