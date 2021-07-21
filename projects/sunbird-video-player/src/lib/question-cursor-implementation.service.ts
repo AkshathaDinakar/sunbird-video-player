@@ -1,11 +1,11 @@
 import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
 import { HttpClient } from '@angular/common/http';
 import { mergeMap, map } from 'rxjs/operators';
-import { of, throwError as observableThrowError, Observable } from 'rxjs';
+import { of, throwError as observableThrowError, Observable,Subject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { Injectable } from "@angular/core";
-import { data as sunbirdData} from './sunbird-data';
-import { data1 } from './quml-library-data';
+//import { data as sunbirdData} from './sunbird-data';
+
 
 @Injectable({
     providedIn: 'root',
@@ -643,9 +643,23 @@ export class QuestionCursorImplementationService implements QuestionCursor {
         }],
         "count": 6
     };
-    constructor(private http: HttpClient) { }
+   
+    sunbirdData :any=[];
+    data1 : any;
+   
+
+    constructor(private http: HttpClient) {
+        
+        this.sunbirdData = JSON.parse(localStorage.getItem('data'));
+        this.data1 = JSON.parse(localStorage.getItem('configData1'));
+     }
+
+     
+
+    
 
     getQuestions(identifiers: string[]): Observable<any> {
+       console.log('identifiers in sunbird-video',identifiers);
         if (this.listUrl) {
             const option: any = {
                 url: this.listUrl,
@@ -659,24 +673,21 @@ export class QuestionCursorImplementationService implements QuestionCursor {
                 return data.result;
             }));
         } else {
-            //return of(this.questionsArray);
-            // let question = _.find(sunbirdData, (data) => data.question.identifier === identifiers[0])['question']
-            // return of({
-            //     "questions": [question[0].question],
-            //     "count": 1
-            // });
-            console.log('identifiers Findout',identifiers);
-            let question = sunbirdData.filter((data)=>{
-                
-                if(data.question.identifier === identifiers[0]){
-                    return data.question;
-                }
-            })
-            console.log('question at the timer',question);
+           // return of(this.questionsArray);
+            let question = _.find(this.sunbirdData, (data) => data.question.identifier === identifiers[0])['question']
+            console.log('get question',question);
             return of({
-                "questions": [question[0].question],
+                "questions": [question],
                 "count": 1
             });
+
+            // let question = this.sunbirdData.filter(data=>{
+            //     if(data.question.identifier === identifiers[0]){
+            //         return data.question
+            //     }
+            // })
+
+           
         }
     }
 
@@ -694,10 +705,7 @@ export class QuestionCursorImplementationService implements QuestionCursor {
                 return data.result;
             }));
         } else {
-            return of({
-                "questions": [this.currentQuestion],
-                "count": 1
-            });
+            return of(this.questionsArray[0]);
         }
     }
 
@@ -719,13 +727,13 @@ export class QuestionCursorImplementationService implements QuestionCursor {
     }
 
     getQUMLPlayerConfig(currentTime) {
-        let config = data1;
-        this.currentQuestion = _.find(sunbirdData, (data) => data.time === currentTime)['question']
-        config.metadata.childNodes = [this.currentQuestion.identifier]
+        let config = this.data1;
+       this.currentQuestion = _.find(this.sunbirdData, (data) => data.time === currentTime)['question']
+       config.metadata.childNodes = [this.currentQuestion.identifier];
         return config
     }
 
     getTime(identifier: string) {
-        return _.find(sunbirdData, (data) => data.question.identifier === identifier)['time']
+        return _.find(this.sunbirdData, (data) => data.question.identifier === identifier)['time']
     }
 }

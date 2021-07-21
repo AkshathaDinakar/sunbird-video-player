@@ -39,8 +39,8 @@ export const data1 = {
         'host': '',
         'endpoint': '/data/v3/telemetry',
         'userData': {
-            'firstName': 'Diptesh',
-            'lastName': 'Mukherjee'
+            'firstName': 'Harish Kumar',
+            'lastName': 'Gangula'
         }
     },
     'metadata': {
@@ -75,7 +75,7 @@ export const data1 = {
         "showTimer": "Yes",
         "author": "Adarsh",
         "consumerId": "b350f619-5eb4-45d5-87ce-fb143ae9f684",
-        "childNodes": ["do_213257772024733696115"],
+        "childNodes": ["do_2132579057673175042129"],
         "languageCode": ["en"],
         "version": 1,
         "isAvailableLocally":false,
@@ -111,7 +111,7 @@ export const data1 = {
         "compatibilityLevel": 4,
         "navigationMode": "non-linear",
         "timeLimits": {
-            "maxTime": "60",
+            "maxTime": "120",
             "warningTime": "5"
         },
         "shuffle": true,

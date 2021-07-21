@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { PlayerConfig } from 'projects/sunbird-video-player/src/lib/playerInterfaces';
+import { data1 } from './qml-library-data';
+import { data as userdata} from './sunbird-data';
+
 
 @Component({
   selector: 'app-root',
@@ -38,6 +41,12 @@ export class AppComponent {
     data: {}
   };
 
+  qumlConfig = data1;
+  userdara = userdata;
+  
+
+
+  
   playerEvent(event) {
     console.log(event);
   }

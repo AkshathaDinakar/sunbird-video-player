@@ -2,7 +2,12 @@
 <div class="player-grid">
     <div>
         <div class="aspectratio" data-ratio="16:9" id="help-video-aspect-ratio" #aspectRatio>
-            <sunbird-video-player [playerConfig]="playerConfig" (playerEvent)="playerEvent($event)" (telemetryEvent)="telemetryEvent($event)"></sunbird-video-player>
+            <sunbird-video-player 
+            [playerConfig]="playerConfig" 
+            [QumlPlayerConfig]="qumlConfig"
+            [userdata] = "userdara"
+            (playerEvent)="playerEvent($event)" 
+            (telemetryEvent)="telemetryEvent($event)"></sunbird-video-player>
           </div>
         
           <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi eos pariatur ea reiciendis mollitia accusantium, maxime fugiat omnis quo possimus dolor eaque dicta rem repellat autem, tenetur praesentium quos veritatis!</p>

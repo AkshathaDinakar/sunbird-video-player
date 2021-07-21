@@ -5,15 +5,15 @@ import {
 import { ErrorService , errorCode , errorMessage } from '@project-sunbird/sunbird-player-sdk-v8';
 
 import { PlayerConfig } from './playerInterfaces';
-import { data1 } from './quml-library-data';
+
 import { ViewerService } from './services/viewer.service';
 import { SunbirdVideoPlayerService } from './sunbird-video-player.service';
 import videojs from 'video.js';
 import 'videojs-markers';
 import { Subject } from 'rxjs';
 import { QuestionCursorImplementationService } from './question-cursor-implementation.service';
-import { data as sunbirdData} from './sunbird-data';
-// declare var jQuery:any;
+
+declare var jQuery:any;
 
 
 @Component({
@@ -24,6 +24,8 @@ import { data as sunbirdData} from './sunbird-data';
 export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() playerConfig: PlayerConfig;
+  @Input() QumlPlayerConfig: any;
+  @Input() userdata : any;
   @Output() playerEvent: EventEmitter<object>;
   @Output() telemetryEvent: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('videoPlayer', { static: true }) videoPlayerRef: ElementRef;
@@ -39,16 +41,15 @@ export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDes
   private unlistenMouseEnter: () => void;
   private unlistenMouseLeave: () => void;
 
-   QumlPlayerConfig = data1;
+   //QumlPlayerConfig = data1;
    isQUMLPlayerShown: boolean = false
    showProceed = false;
   videoDisplay = 'block';
   player_video : any;
   eventsSubject: Subject<any> = new Subject<any>();
     displayPauseAndPlay = {};
-    markers = sunbirdData.map((marker) => {
-      return {time : marker.time , text : marker.question.name}
-    })
+    markers :[];
+    
   constructor(
     public videoPlayerService: SunbirdVideoPlayerService,
     public viewerService: ViewerService,
@@ -90,6 +91,13 @@ export class SunbirdVideoPlayerComponent implements OnInit, AfterViewInit, OnDes
 
   ngOnInit() {
     /* tslint:disable:no-string-literal */
+    console.log('player congif userdata ngOnInIt',this.userdata);
+    this.markers = this.userdata.map((marker) => {
+      return {time : marker.time , text : marker.question.name}
+    })
+    localStorage.setItem('data',JSON.stringify(this.userdata));
+    localStorage.setItem('configData1',JSON.stringify(this.QumlPlayerConfig));
+    
     this.traceId = this.playerConfig.config['traceId'];
     // Log event when internet is not available
     this.errorService.getInternetConnectivityError.subscribe(event => {
@@ -209,14 +217,15 @@ this.player_video = videojs(event);
   }
 
   getPlayerEvents(event) {
-    console.log('get player events', JSON.stringify(event));
-    // let time = this.questionCursor.getTime(event.item.id)
-    // this.showProceed = true
-    // if(event.pass == 'No') {
-    //   jQuery(`div[data-marker-time='${time}']`).css('background-color', 'red')
-    // } else {
-    //   jQuery(`div[data-marker-time='${time}']`).css('background-color', 'green')
-    // }
+   
+    console.log('get player events', event);
+    let time = this.questionCursor.getTime(event.item.id)
+    this.showProceed = true
+    if(event.pass == 'No') {
+      jQuery(`div[data-marker-time='${time}']`).css('background-color', 'red')
+    } else {
+      jQuery(`div[data-marker-time='${time}']`).css('background-color', 'green')
+    }
   }
 
   getTelemetryEvents(event) {
