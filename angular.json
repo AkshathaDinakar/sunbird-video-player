@@ -38,7 +38,8 @@
               "node_modules/video.js/dist/video-js.min.css",
               "node_modules/videojs-markers/dist/videojs.markers.min.css",
               "src/quml-carousel.css",
-              "./node_modules/katex/dist/katex.min.css"
+              "./node_modules/katex/dist/katex.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
               
             ],
             "scripts": [
