@@ -12,7 +12,7 @@ export var data = [
                     "cardinality": "single",
                     "type": "integer",
                     "correctResponse": {
-                        "value": "2",
+                        "value": "1",
                         "outcomes": {
                             "SCORE": 2
                         }
@@ -220,7 +220,7 @@ export var data = [
                     "cardinality": "single",
                     "type": "integer",
                     "correctResponse": {
-                        "value": "2",
+                        "value": "3",
                         "outcomes": {
                             "SCORE": 2
                         }
@@ -323,7 +323,7 @@ export var data = [
                     "cardinality": "single",
                     "type": "integer",
                     "correctResponse": {
-                        "value": "4",
+                        "value": "3",
                         "outcomes": {
                             "SCORE": 2
                         }
@@ -426,7 +426,7 @@ export var data = [
                     "cardinality": "single",
                     "type": "integer",
                     "correctResponse": {
-                        "value": "2",
+                        "value": "0",
                         "outcomes": {
                             "SCORE": 2
                         }
